@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <title>Розклад уроків</title>
+  <style>
+    table { border-collapse: collapse; margin-bottom: 50px; }
+    th, td { border: 1px solid #999; padding: 8px 12px; text-align: center; }
+    th { background: #f0f0f0; }
+    h2 { margin-top: 50px; }
+  </style>
+</head>
+<body>
+  <h1>Розклад уроків</h1>
+  {% for class_name, schedule in all_schedule.items() %}
+    <h2>Клас {{ class_name }}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>День</th>
+          <th colspan="10">Уроки</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for day in days %}
+          <tr>
+            <td>{{ day }}</td>
+            {% for lesson in schedule[day] %}
+              {% if lesson %}
+                <td>{{ lesson[0] }}<br><small>{{ lesson[1] }}</small></td>
+              {% else %}
+                <td>-</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+</body>
+</html>
