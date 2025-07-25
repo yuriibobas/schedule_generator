@@ -14,10 +14,7 @@ LESSON_HOURS = [
     "11:15–12:00",
     "12:10–12:55",
     "13:05–13:50",
-    "14:00–14:45",
-    "14:55–15:40",
-    "15:50–16:35",
-    "16:45–17:30"
+    "14:00–14:45"
 ]
 
 
@@ -51,20 +48,23 @@ def generate_schedule_for_class(class_name):
         subject_pool.extend([subject] * hours)
 
     repeatable_subjects = {'алгебра', 'геометрія'}
-    max_attempts = 20
+    forbidden_last_slot_subjects = {'алгебра', 'геометрія'}
+    max_attempts = 100
 
     for _ in range(max_attempts):
         random.shuffle(subject_pool)
         number_of_lessons = get_number_of_lessons(class_num)
-        schedule = {day: [None]*number_of_lessons[day] for day in DAYS}
+        schedule = {day: [None] * number_of_lessons[day] for day in DAYS}
         local_teacher_schedule = defaultdict(lambda: defaultdict(set))
         success = True
 
         for subject in subject_pool:
             placed = False
             for day in DAYS:
+                day_lessons = number_of_lessons[day]
                 existing_count = sum(1 for s in schedule[day] if s is not None and s[0] == subject)
 
+                # Обмеження на кількість повторень предмета
                 if class_num >= 9 and subject in repeatable_subjects:
                     if existing_count >= 2:
                         continue
@@ -72,7 +72,10 @@ def generate_schedule_for_class(class_name):
                     if existing_count >= 1:
                         continue
 
-                for slot in range(number_of_lessons[day]):
+                for slot in range(day_lessons):
+                    # Заборона алгебри і геометрії на останньому уроці
+                    if subject in forbidden_last_slot_subjects and slot == day_lessons - 1:
+                        continue
                     if schedule[day][slot] is None:
                         for teacher in random.sample(teachers[subject], len(teachers[subject])):
                             if slot not in teacher_schedule[teacher][day] and slot not in local_teacher_schedule[teacher][day]:
@@ -89,23 +92,34 @@ def generate_schedule_for_class(class_name):
                 success = False
                 break
 
-        if success:
+        # Перевірка: чи залишився хоч один None?
+        if success and all(None not in schedule[day] for day in DAYS):
             for teacher, dayslots in local_teacher_schedule.items():
                 for day, slots in dayslots.items():
                     teacher_schedule[teacher][day].update(slots)
             return schedule
 
-    return schedule
+    return None  # якщо не вдалося після max_attempts
+
 
 
 
 @app.route('/')
 def home():
-    all_schedule = {}
-    teacher_schedule.clear()  # обнуляємо перед новою генерацією
-    for cl in classes:
-        all_schedule[cl] = generate_schedule_for_class(cl)
-    return render_template('schedule.html', all_schedule=all_schedule, days=DAYS, lesson_hours=LESSON_HOURS)
+    while True:
+        all_schedule = {}
+        teacher_schedule.clear()
+        success = True
+
+        for cl in classes:
+            schedule = generate_schedule_for_class(cl)
+            if schedule is None:
+                success = False
+                break
+            all_schedule[cl] = schedule
+
+        if success:
+            return render_template('schedule.html', all_schedule=all_schedule, days=DAYS, lesson_hours = LESSON_HOURS)
 
 
 if __name__ == '__main__':
