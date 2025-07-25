@@ -1,47 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <title>Розклад уроків</title>
-  <style>
-    table { border-collapse: collapse; margin-bottom: 50px; }
-    th, td { border: 1px solid #999; padding: 8px 12px; text-align: center; }
-    th { background: #f0f0f0; }
-    h2 { margin-top: 50px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Розклад уроків</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>Розклад уроків</h1>
-  {% for class_name, schedule in all_schedule.items() %}
-    <h2>Клас {{ class_name }}</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>День</th>
-          <th colspan="10">Уроки</th>
-        </tr>
-        <tr>
-          <td>Година</td>
-          {% for time in lesson_hours %}
-            <td>{{ time }}</td>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for day in days %}
-          <tr>
-            <td>{{ day }}</td>
-            {% for lesson in schedule[day] %}
-              {% if lesson %}
-                <td>{{ lesson[0] }}<br><small>{{ lesson[1] }}</small></td>
-              {% else %}
-                <td>-</td>
-              {% endif %}
-            {% endfor %}
-          </tr>
+    <h1>Розклад уроків</h1>
+    <div class="grid-container">
+        {% for class_name, schedule in all_schedule.items() %}
+        <div class="class-card">
+            <h2>{{ class_name }}</h2>
+            <div class="table">
+                {% for day in days %}
+                <div class="day-row">
+                    <div class="day-name">{{ day }}</div>
+                    <div class="lessons">
+                        {% for lesson in schedule[day] %}
+                        <div class="lesson">
+                            {% if lesson %}
+                                {{ lesson[0] }}<br><span class="teacher">({{ lesson[1] }})</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
-      </tbody>
-    </table>
-  {% endfor %}
+    </div>
 </body>
 </html>
