@@ -1,27 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Розклад</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="utf-8">
+  <title>Розклад уроків</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Розклад класу {{ class_name }}</h1>
-    <div class="schedule-container">
-        {% for day, lessons in schedule.items() %}
-        <div class="day-block">
-            <h2>{{ day }}</h2>
-            <div class="lesson-grid">
-                {% for lesson in lessons %}
-                <div class="lesson-card {{ lesson[0] }}">
-                    <div class="subject">{{ lesson[0] }}</div>
-                    <div class="teacher">{{ lesson[1] }}</div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+  <h1>Розклад уроків</h1>
+  {% for class_name, schedule in all_schedule.items() %}
+    <h2>Клас {{ class_name }}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>День</th>
+          <th colspan="10">Уроки</th>
+        </tr>
+        <tr>
+          <td>Година</td>
+          {% for time in lesson_hours %}
+            <td>{{ time }}</td>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for day in days %}
+          <tr>
+            <td>{{ day }}</td>
+            {% for lesson in schedule[day] %}
+              {% if lesson %}
+                <td>{{ lesson[0] }}<br><small>{{ lesson[1] }}</small></td>
+              {% else %}
+                <td>-</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
         {% endfor %}
-    </div>
+      </tbody>
+    </table>
+  {% endfor %}
 </body>
 </html>
-м
