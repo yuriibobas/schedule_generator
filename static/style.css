@@ -1,76 +1,88 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f7f9fb;
     margin: 0;
     padding: 20px;
-    background-color: #f2f4f8;
     color: #333;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 30px;
+    color: #333;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 10px;
+.day-block {
+    margin-bottom: 40px;
 }
 
-.class-card {
-    background-color: #fff;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.class-card h2 {
-    text-align: center;
+.day-block h2 {
+    font-size: 20px;
     margin-bottom: 15px;
+    color: #444;
+    border-left: 5px solid #ccc;
+    padding-left: 10px;
 }
 
-.table {
+.lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.lesson-card {
+    border-radius: 12px;
+    padding: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+    min-height: 80px;
+    transition: transform 0.2s;
 }
 
-.day-row {
-    display: flex;
-    align-items: flex-start;
+.lesson-card:hover {
+    transform: scale(1.03);
 }
 
-.day-name {
-    width: 40px;
+.subject {
     font-weight: bold;
-    padding-right: 10px;
-    flex-shrink: 0;
-}
-
-.lessons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    flex-grow: 1;
-}
-
-.lesson {
-    background-color: #e0ecff;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 13px;
-    min-width: 80px;
-    text-align: center;
-    flex-grow: 1;
-    transition: all 0.2s ease;
-}
-
-.lesson:hover {
-    background-color: #c6dcff;
+    font-size: 16px;
 }
 
 .teacher {
-    font-size: 11px;
-    color: #555;
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Індивідуальні кольори предметів */
+.lesson-card.матем       { background-color: #d6eaff; }
+.lesson-card.укр_мова    { background-color: #ffe4e1; }
+.lesson-card.укр_літ     { background-color: #ffebe6; }
+.lesson-card.англ        { background-color: #e6f7ff; }
+.lesson-card.історія     { background-color: #fff7cc; }
+.lesson-card.іст_укр     { background-color: #fff7cc; }
+.lesson-card.іст_світ    { background-color: #fff7cc; }
+.lesson-card.алг_геом    { background-color: #d0e6ff; }
+.lesson-card.алг         { background-color: #d0e6ff; }
+.lesson-card.геом        { background-color: #d0e6ff; }
+.lesson-card.біологія    { background-color: #daf5dc; }
+.lesson-card.фізика      { background-color: #e0e0ff; }
+.lesson-card.хімія       { background-color: #ffe6fa; }
+.lesson-card.географія   { background-color: #e5ffe5; }
+.lesson-card.природ      { background-color: #eaffea; }
+.lesson-card.труд        { background-color: #f0e6ff; }
+.lesson-card.мистецтво   { background-color: #fce6ff; }
+.lesson-card.інформатика { background-color: #e6f2ff; }
+.lesson-card.здоров’я    { background-color: #ffe4b3; }
+.lesson-card.захист_укр  { background-color: #ffe0cc; }
+.lesson-card.право       { background-color: #fcefdc; }
+.lesson-card.фізра       { background-color: #e0fff2; }
+
+@media (max-width: 600px) {
+    .lesson-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
